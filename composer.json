@@ -1,0 +1,35 @@
+{
+    "name": "canaltp/media-manager-bundle",
+    "type": "symfony-bundle",
+    "description": "Media Manager Bundle",
+    "keywords": [],
+    "homepage": "http://hg.prod.canaltp.fr/ctp/MediaManagerBundle.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rémy Abi-Khalil",
+            "email": "remy.abikhalil@canaltp.fr"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "canaltp/media-manager",
+                "version": "0.1",
+                "source": {
+                    "url": "http://hg.prod.canaltp.fr/ctp/MediaManager.git",
+                    "type": "git",
+                    "reference": "5e1c953a934b613c3f8baca50d35067a59282490"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "canaltp/media-manager": "0.1"
+    },
+    "autoload": {
+        "psr-0": { "CanalTP\\MediaManager": "src/" }
+    }
+}

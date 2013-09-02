@@ -1,0 +1,3 @@
+canal_tp_media_manager_homepage:
+    pattern:  /
+    defaults: { _controller: CanalTPMediaManagerBundle:Default:index }
