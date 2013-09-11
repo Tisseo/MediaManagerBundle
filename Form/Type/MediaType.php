@@ -74,8 +74,7 @@ class MediaType extends AbstractType
         $result = $service->call($this->exampleNavitiaQuery());
 
         $this->initLogoField($builder);
-        if ($result->pagination->total_result > 0)
-        {
+        if ($result->pagination->total_result > 0) {
             $this->initNetworkFields($builder, $result->networks);
         }
         $this->initButtonSubmit($builder);

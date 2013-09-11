@@ -60,12 +60,9 @@ class MediaController extends Controller
             $path = "/tmp/TEST/" . $fileName;
 
             $file->move("/tmp/TEST/", $fileName);
-            if ($this->save($path, $key, $mediaBuilder))
-            {
+            if ($this->save($path, $key, $mediaBuilder)) {
                 $this->get('session')->getFlashBag()->add('notice', $fileName);
-            }
-            else
-            {
+            } else {
                 $this->get('session')->getFlashBag()->add('error', $fileName);
             }
         }
