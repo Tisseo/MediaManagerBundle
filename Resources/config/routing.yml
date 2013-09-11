@@ -1,3 +1,6 @@
 canal_tp_media_manager_add_media:
     pattern:  /MediaManager/add
     defaults: { _controller: CanalTPMediaManagerBundle:Media:add }
+canal_tp_media_manager_all_media:
+    pattern:  /MediaManager/all
+    defaults: { _controller: CanalTPMediaManagerBundle:Media:add }

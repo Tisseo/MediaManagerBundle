@@ -4,7 +4,7 @@ namespace CanalTP\MediaManagerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use CanalTP\MediaManagerBundle\Form\Type\Media;
+use CanalTP\MediaManagerBundle\Form\Type\MediaType;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
@@ -47,7 +47,7 @@ class MediaController extends Controller
         return ($categoryFactory->create($categoryType));
     }
 
-    private function saveFile($file, $category)
+    private function save($file, $category)
     {
         $company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
@@ -62,7 +62,22 @@ class MediaController extends Controller
 
         $media = $mediaBuilder->buildMedia($file, $company, $category);
 
-        $company->addMedia($media);
+        return ($company->addMedia($media));
+    }
+
+    private function saveFiles($files)
+    {
+        foreach($files as $key => $file)
+        {
+            $fileName = $file->getClientOriginalName();
+            $path = "/tmp/TEST/" . $fileName;
+
+            $file->move("/tmp/TEST/", $fileName);
+            if ($this->save($path, $this->getCategory($key)))
+                $this->get('session')->getFlashBag()->add('notice', $fileName);
+            else
+                $this->get('session')->getFlashBag()->add('error', $fileName);
+        }
     }
 
     private function processForm(Request $request, $form)
@@ -71,26 +86,23 @@ class MediaController extends Controller
 
         if ($form->isValid())
         {
+            $this->saveFiles($form->getData());
 
-            $files = $form->getData();
-            foreach($files as $key => $file)
-            {
-                $path = "/tmp/TEST/" . $file->getClientOriginalName();
-                $file->move("/tmp/TEST/", $file->getClientOriginalName());
-
-                $this->saveFile($path, $this->getCategory('logo'));
-            }
+            return $this->redirect(
+                $this->generateUrl('canal_tp_media_manager_all_media')
+            );
         }
-    }
-
-    public function addAction(Request $request)
-    {
-        $form = $this->createForm(new Media());
-        $this->processForm($request, $form);
-
         return $this->render(
             'CanalTPMediaManagerBundle:Media:add.html.twig',
             array('form' => $form->createView())
         );
+    }
+
+    public function addAction(Request $request)
+    {
+        $form = $this->createForm(new MediaType());
+        $render = $this->processForm($request, $form);
+
+        return ($render);
     }
 }
