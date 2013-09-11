@@ -53,7 +53,10 @@ class MediaType extends AbstractType
         );
     }
 
-    private function initNetworkFields(FormBuilderInterface $builder, array $networks)
+    private function initNetworkFields(
+        FormBuilderInterface $builder,
+        array $networks
+        )
     {
         foreach ($networks as $network) {
             $builder->add(
@@ -72,7 +75,9 @@ class MediaType extends AbstractType
 
         $this->initLogoField($builder);
         if ($result->pagination->total_result > 0)
+        {
             $this->initNetworkFields($builder, $result->networks);
+        }
         $this->initButtonSubmit($builder);
     }
 

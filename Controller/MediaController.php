@@ -55,16 +55,19 @@ class MediaController extends Controller
     {
         $mediaBuilder = new MediaBuilder();
 
-        foreach($files as $key => $file)
-        {
+        foreach($files as $key => $file) {
             $fileName = $file->getClientOriginalName();
             $path = "/tmp/TEST/" . $fileName;
 
             $file->move("/tmp/TEST/", $fileName);
             if ($this->save($path, $key, $mediaBuilder))
+            {
                 $this->get('session')->getFlashBag()->add('notice', $fileName);
+            }
             else
+            {
                 $this->get('session')->getFlashBag()->add('error', $fileName);
+            }
         }
     }
 
@@ -72,8 +75,7 @@ class MediaController extends Controller
     {
         $form->handleRequest($request);
 
-        if ($form->isValid())
-        {
+        if ($form->isValid()) {
             $this->saveFiles($form->getData());
 
             return $this->redirect(
