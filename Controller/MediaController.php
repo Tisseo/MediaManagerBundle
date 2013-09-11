@@ -13,6 +13,8 @@ use CanalTP\MediaManager\Category\CategoryType;
 
 class MediaController extends Controller
 {
+    private $company = null;
+
     private function exampleParams()
     {
         $params = array(
@@ -28,52 +30,38 @@ class MediaController extends Controller
         return ($params);
     }
 
-    private function getCategory($name)
+    private function getCategory($type)
     {
         $categoryFactory = new CategoryFactory();
-        $categoryType = null;
 
-        switch ($name) {
-            case 'logo':
-                $categoryType = CategoryType::LOGO;
-                break;            
-            case 'line':
-                $categoryType = CategoryType::LINE;
-                break;
-            case 'network':
-                $categoryType = CategoryType::NETWORK;
-                break;
-        }
-        return ($categoryFactory->create($categoryType));
+        return ($categoryFactory->create($type));
     }
 
-    private function save($file, $category)
+    private function save($file, $key, $mediaBuilder)
     {
-        $company = new Company();
-        $configurationBuilder = new ConfigurationBuilder();
-        $mediaBuilder = new MediaBuilder();
+        list($fileName, $categoryType) = split('-', $key);
 
-        $category->setName('My_Logo');
-        $company->setName("My_Company");
-
-        $company->setConfiguration(
-            $configurationBuilder->buildConfiguration($this->exampleParams())
+        $media = $mediaBuilder->buildMedia(
+            $file,
+            $this->company,
+            $this->getCategory($categoryType)
         );
+        $media->setFileName($fileName);
 
-        $media = $mediaBuilder->buildMedia($file, $company, $category);
-
-        return ($company->addMedia($media));
+        return ($this->company->addMedia($media));
     }
 
     private function saveFiles($files)
     {
+        $mediaBuilder = new MediaBuilder();
+
         foreach($files as $key => $file)
         {
             $fileName = $file->getClientOriginalName();
             $path = "/tmp/TEST/" . $fileName;
 
             $file->move("/tmp/TEST/", $fileName);
-            if ($this->save($path, $this->getCategory($key)))
+            if ($this->save($path, $key, $mediaBuilder))
                 $this->get('session')->getFlashBag()->add('notice', $fileName);
             else
                 $this->get('session')->getFlashBag()->add('error', $fileName);
@@ -98,8 +86,20 @@ class MediaController extends Controller
         );
     }
 
+    private function initCompanySettings($params)
+    {
+        $this->company = new Company();
+        $configurationBuilder = new ConfigurationBuilder();
+
+        $this->company->setName("CanalTP");
+        $this->company->setConfiguration(
+            $configurationBuilder->buildConfiguration($params)
+        );
+    }
+
     public function addAction(Request $request)
     {
+        $this->initCompanySettings($this->exampleParams());
         $form = $this->createForm(new MediaType());
         $render = $this->processForm($request, $form);
 

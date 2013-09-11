@@ -18,7 +18,8 @@
         }
     ],
     "require": {
-        "canaltp/media-manager": "dev-master"
+        "canaltp/media-manager": "dev-master",
+        "canaltp/navitia": "dev-master"
     },
     "autoload": {
         "psr-0": { "CanalTP\\MediaManagerBundle": "src/" }
