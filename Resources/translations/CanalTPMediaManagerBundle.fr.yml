@@ -1,0 +1,5 @@
+# Forms
+form:
+    add:
+        title: Ajouter un média
+        submit: Enregistrer

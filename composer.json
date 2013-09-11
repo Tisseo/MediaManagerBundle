@@ -13,23 +13,14 @@
     ],
     "repositories": [
         {
-            "type": "package",
-            "package": {
-                "name": "canaltp/media-manager",
-                "version": "0.1",
-                "source": {
-                    "url": "http://hg.prod.canaltp.fr/ctp/MediaManager.git",
-                    "type": "git",
-                    "reference": "5e1c953a934b613c3f8baca50d35067a59282490"
-                }
-            }
+            "type": "composer",
+            "url": "packagist.canaltp.fr"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "canaltp/media-manager": "0.1"
+        "canaltp/media-manager": "dev-master"
     },
     "autoload": {
-        "psr-0": { "CanalTP\\MediaManager": "src/" }
+        "psr-0": { "CanalTP\\MediaManagerBundle": "src/" }
     }
 }
