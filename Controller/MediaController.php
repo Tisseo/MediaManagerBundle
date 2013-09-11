@@ -55,7 +55,7 @@ class MediaController extends Controller
     {
         $mediaBuilder = new MediaBuilder();
 
-        foreach($files as $key => $file) {
+        foreach ($files as $key => $file) {
             $fileName = $file->getClientOriginalName();
             $path = "/tmp/TEST/" . $fileName;
 
