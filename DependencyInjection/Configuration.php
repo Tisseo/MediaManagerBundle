@@ -20,9 +20,20 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('canal_tp_media_manager');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->scalarNode('tmp_dir')
+                    ->defaultValue('/tmp/CanalTP/MediaManager/')
+                ->end()
+                ->scalarNode('company_path')
+                    ->defaultValue(__DIR__ . '/../Resources/config/company.yml')
+                ->end()
+                ->scalarNode('navitia_path')
+                    ->defaultValue(__DIR__ . '/../Resources/config/navitia.yml')
+                ->end()
+            ->end()
+        ->end()
+        ;
 
         return $treeBuilder;
     }

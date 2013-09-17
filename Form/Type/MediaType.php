@@ -9,14 +9,11 @@ use CanalTP\MediaManager\Category\CategoryType;
 
 class MediaType extends AbstractType
 {
-    private function exampleNavitiaConfig()
-    {
-        $config = array(
-            'url' => 'http://navitia2-ws.ctp.dev.canaltp.fr',
-            'format' => 'object'
-        );
+    private $navitia;
 
-        return ($config);
+    public function __construct(array $navitia)
+    {
+        $this->navitia = $navitia;
     }
 
     private function exampleNavitiaQuery()
@@ -70,7 +67,7 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $service = ServiceFacade::getInstance();
-        $service->setConfiguration($this->exampleNavitiaConfig());
+        $service->setConfiguration($this->navitia);
         $result = $service->call($this->exampleNavitiaQuery());
 
         $this->initLogoField($builder);

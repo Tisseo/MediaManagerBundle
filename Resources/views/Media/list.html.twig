@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+<h1>{{ 'list.title'|trans({}, 'CanalTPMediaManagerBundle') }}</h1>
+
+<table>
+    {% for media in medias %}
+    <tr>
+        <td>{{ media }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

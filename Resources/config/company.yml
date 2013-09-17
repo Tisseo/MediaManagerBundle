@@ -1,0 +1,5 @@
+name: "CanalTP"
+storage:
+    type: "filesystem"
+    path: "/tmp/my_storage/"
+strategy: "default"

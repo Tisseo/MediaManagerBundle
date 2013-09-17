@@ -3,3 +3,5 @@ form:
     add:
         title: Ajouter un média
         submit: Enregistrer
+list:
+    title: Liste des médias

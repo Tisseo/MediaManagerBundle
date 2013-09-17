@@ -4,6 +4,7 @@ namespace CanalTP\MediaManagerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Navitia\Component\Service\ServiceFacade;
 use CanalTP\MediaManagerBundle\Form\Type\MediaType;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
@@ -15,19 +16,17 @@ class MediaController extends Controller
 {
     private $company = null;
 
-    private function exampleParams()
+    private function exampleNavitiaQuery()
     {
-        $params = array(
-            'company' => array(
-            'storage' => array(
-                'type' => 'filesystem',
-                'path' => '/tmp/my_storage/',
-            ),
-            'strategy' => 'default'
+        $query = array(
+            'api' => 'coverage',
+            'parameters' => array(
+                'region' => 'PaysDeLaLoire',
+                'action' => 'networks'
             )
         );
 
-        return ($params);
+        return ($query);
     }
 
     private function getCategory($type)
@@ -57,9 +56,9 @@ class MediaController extends Controller
 
         foreach ($files as $key => $file) {
             $fileName = $file->getClientOriginalName();
-            $path = "/tmp/TEST/" . $fileName;
+            $path = $this->container->getParameter('path.tmp') . $fileName;
 
-            $file->move("/tmp/TEST/", $fileName);
+            $file->move($this->container->getParameter('path.tmp'), $fileName);
             if ($this->save($path, $key, $mediaBuilder)) {
                 $this->get('session')->getFlashBag()->add('notice', $fileName);
             } else {
@@ -85,23 +84,43 @@ class MediaController extends Controller
         );
     }
 
-    private function initCompanySettings($params)
+    private function initCompanySettings()
     {
         $this->company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
+        $company = $this->container->getParameter('config.company');
 
-        $this->company->setName("CanalTP");
+        $this->company->setName($company['name']);
         $this->company->setConfiguration(
-            $configurationBuilder->buildConfiguration($params)
+            $configurationBuilder->buildConfiguration($company)
         );
     }
 
     public function addAction(Request $request)
     {
-        $this->initCompanySettings($this->exampleParams());
-        $form = $this->createForm(new MediaType());
+        $this->initCompanySettings();
+        $form = $this->createForm(
+            new MediaType(
+                $this->container->getParameter('config.navitia')
+            )
+        );
         $render = $this->processForm($request, $form);
 
         return ($render);
+    }
+
+    public function listAction(Request $request)
+    {
+        $service = ServiceFacade::getInstance();
+        $service->setConfiguration(
+            $this->container->getParameter('config.navitia')
+        );
+        $result = $service->call($this->exampleNavitiaQuery());
+        $medias = array();
+
+        return $this->render(
+            'CanalTPMediaManagerBundle:Media:list.html.twig',
+            array('medias' => $medias)
+        );
     }
 }
