@@ -15,6 +15,8 @@ use CanalTP\MediaManager\Category\CategoryType;
 class MediaController extends Controller
 {
     private $company = null;
+    private $categoryFactory = null;
+    private $mediaBuilder = null;
 
     private function exampleNavitiaQuery()
     {
@@ -29,37 +31,48 @@ class MediaController extends Controller
         return ($query);
     }
 
-    private function getCategory($type)
+    private function getCategory($key, $networkCategory, $logoCategory)
     {
-        $categoryFactory = new CategoryFactory();
+        list($id, $name) = split(':', $key);
+        echo $id . "<br>";
+        $category = $this->categoryFactory->create($id);
 
-        return ($categoryFactory->create($type));
+        $category->setId($name);
+        $category->setName($name);
+        if ($id == $networkCategory->getId()) {
+            $category->setParent($networkCategory);
+        } else {
+            $category->setParent($logoCategory);
+        }
+        return ($category);
     }
 
-    private function save($file, $key, $mediaBuilder)
+    private function save($file, $key, $networkCategory, $logoCategory)
     {
-        list($fileName, $categoryType) = split('-', $key);
+        $category = $this->getCategory($key, $networkCategory, $logoCategory);
 
-        $media = $mediaBuilder->buildMedia(
+        $media = $this->mediaBuilder->buildMedia(
             $file,
             $this->company,
-            $this->getCategory($categoryType)
+            $category
         );
-        $media->setFileName($fileName);
-
+        $media->setFileName($category->getName());
         return ($this->company->addMedia($media));
     }
 
     private function saveFiles($files)
     {
-        $mediaBuilder = new MediaBuilder();
+        $this->mediaBuilder = new MediaBuilder();
+        $this->categoryFactory = new CategoryFactory();
+        $netCategory = $this->categoryFactory->create(CategoryType::NETWORK);
+        $logoCategory = $this->categoryFactory->create(CategoryType::LOGO);
 
         foreach ($files as $key => $file) {
             $fileName = $file->getClientOriginalName();
             $path = $this->container->getParameter('path.tmp') . $fileName;
 
             $file->move($this->container->getParameter('path.tmp'), $fileName);
-            if ($this->save($path, $key, $mediaBuilder)) {
+            if ($this->save($path, $key, $netCategory, $logoCategory)) {
                 $this->get('session')->getFlashBag()->add('notice', $fileName);
             } else {
                 $this->get('session')->getFlashBag()->add('error', $fileName);
@@ -116,11 +129,22 @@ class MediaController extends Controller
             $this->container->getParameter('config.navitia')
         );
         $result = $service->call($this->exampleNavitiaQuery());
+        $categoryFactory = new CategoryFactory();
+        $networkCategory = $categoryFactory->create(CategoryType::NETWORK);
+        $logoCategory = $categoryFactory->create(CategoryType::LOGO);
         $medias = array();
 
+        $this->initCompanySettings();
+        $networks = $this->company->getMediasByCategory($networkCategory);
+        $logo = $this->company->getMediasByCategory($logoCategory);
         return $this->render(
             'CanalTPMediaManagerBundle:Media:list.html.twig',
-            array('medias' => $medias)
+            array(
+                'networks' => $networks,
+                'logos' => $logo,
+                'logoCategory' => $logoCategory,
+                'networkCategory' => $networkCategory
+            )
         );
     }
 }

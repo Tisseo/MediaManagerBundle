@@ -32,7 +32,7 @@ class MediaType extends AbstractType
     private function initLogoField(FormBuilderInterface $builder)
     {
         $builder->add(
-            'logo-' . CategoryType::LOGO,
+            'logo:logo',
             'file',
             array('label' => 'logo', 'required' => true)
         );
@@ -55,25 +55,33 @@ class MediaType extends AbstractType
         array $networks
         )
     {
-        foreach ($networks as $network) {
+        foreach ($networks as $id => $name) {
             $builder->add(
-                $network->id . '-' . CategoryType::NETWORK,
+                $id,
                 'file',
-                array('label' => $network->name, 'required' => true)
+                array('label' => $name, 'required' => true)
             );
         }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $service = ServiceFacade::getInstance();
-        $service->setConfiguration($this->navitia);
-        $result = $service->call($this->exampleNavitiaQuery());
+        // $service = ServiceFacade::getInstance();
+        // $service->setConfiguration($this->navitia);
+        // $result = $service->call($this->exampleNavitiaQuery());
+
+        $networks = array(
+                        'network:AAA' => 'AAA',
+                        'network:BBB' => 'BBB',
+                        'network:CCC' => 'CCC',
+                        'network:DDD' => 'DDD',
+                        'network:EEE' => 'EEE'
+        );
 
         $this->initLogoField($builder);
-        if ($result->pagination->total_result > 0) {
-            $this->initNetworkFields($builder, $result->networks);
-        }
+        // if ($result->pagination->total_result > 0) {
+            $this->initNetworkFields($builder, $networks);
+        // }
         $this->initButtonSubmit($builder);
     }
 

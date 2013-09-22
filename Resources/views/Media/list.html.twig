@@ -3,10 +3,46 @@
 {% block body %}
 <h1>{{ 'list.title'|trans({}, 'CanalTPMediaManagerBundle') }}</h1>
 
-<table>
-    {% for media in medias %}
+<h3>{{ 'list.category.logo'|trans({}, 'CanalTPMediaManagerBundle') }} ({{ logoCategory.getMediaNumber() }})</h3>
+<table border="1" width="1200px">
     <tr>
-        <td>{{ media }}</td>
+        <td>Filename</td>
+        <td>Basename</td>
+        <td>Path</td>
+        <td>Size</td>
+        <td>Company</td>
+        <td>Category</td>
+    </tr>
+    {% for media in logos %}
+    <tr>
+        <td>{{ media.getFileName() }}</td>
+        <td>{{ media.getBaseName() }}</td>
+        <td>{{ media.getPath() }}</td>
+        <td>{{ media.getSize() }}</td>
+        <td>{{ media.getCompany().getName() }}</td>
+        <td>{{ media.getCategory().getName() }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>{{ 'list.category.network'|trans({}, 'CanalTPMediaManagerBundle') }} ({{ networkCategory.getMediaNumber() }})</h3>
+<table border="1" width="1200px">
+    <tr>
+        <td>Filename</td>
+        <td>Basename</td>
+        <td>Path</td>
+        <td>Size</td>
+        <td>Company</td>
+        <td>Category</td>
+    </tr>
+    {% for media in networks %}
+    <tr>
+        <td>{{ media.getFileName() }}</td>
+        <td>{{ media.getBaseName() }}</td>
+        <td>{{ media.getPath() }}</td>
+        <td>{{ media.getSize() }}</td>
+        <td>{{ media.getCompany().getName() }}</td>
+        <td>{{ media.getCategory().getName() }}</td>
     </tr>
     {% endfor %}
 </table>
