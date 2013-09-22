@@ -124,15 +124,9 @@ class MediaController extends Controller
 
     public function listAction(Request $request)
     {
-        $service = ServiceFacade::getInstance();
-        $service->setConfiguration(
-            $this->container->getParameter('config.navitia')
-        );
-        $result = $service->call($this->exampleNavitiaQuery());
         $categoryFactory = new CategoryFactory();
         $networkCategory = $categoryFactory->create(CategoryType::NETWORK);
         $logoCategory = $categoryFactory->create(CategoryType::LOGO);
-        $medias = array();
 
         $this->initCompanySettings();
         $networks = $this->company->getMediasByCategory($networkCategory);
@@ -145,6 +139,22 @@ class MediaController extends Controller
                 'logoCategory' => $logoCategory,
                 'networkCategory' => $networkCategory
             )
+        );
+    }
+
+
+    public function deleteAction($type, $basename)
+    {
+        $categoryFactory = new CategoryFactory();
+        $category = $categoryFactory->create($type);
+        $this->initCompanySettings();
+
+        if ($this->company->removeMedia($category, $basename))
+            $this->get('session')->getFlashBag()->add('notice', $basename);
+        else
+            $this->get('session')->getFlashBag()->add('error', $basename);
+        return $this->redirect(
+            $this->generateUrl('canal_tp_media_manager_all_media')
         );
     }
 }

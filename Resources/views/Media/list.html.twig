@@ -12,6 +12,7 @@
         <td>Size</td>
         <td>Company</td>
         <td>Category</td>
+        <td>Actions</td>
     </tr>
     {% for media in logos %}
     <tr>
@@ -21,6 +22,11 @@
         <td>{{ media.getSize() }}</td>
         <td>{{ media.getCompany().getName() }}</td>
         <td>{{ media.getCategory().getName() }}</td>
+        <td>
+            <a href="{{ path('canal_tp_media_manager_delete_media', { 'type': media.getCategory().getId(), 'basename': media.getBaseName() }) }}">
+                {{ 'list.media.delete'|trans({}, 'CanalTPMediaManagerBundle') }}
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
@@ -34,6 +40,7 @@
         <td>Size</td>
         <td>Company</td>
         <td>Category</td>
+        <td>Actions</td>
     </tr>
     {% for media in networks %}
     <tr>
@@ -43,6 +50,11 @@
         <td>{{ media.getSize() }}</td>
         <td>{{ media.getCompany().getName() }}</td>
         <td>{{ media.getCategory().getName() }}</td>
+        <td>
+            <a href="{{ path('canal_tp_media_manager_delete_media', { 'type': media.getCategory().getId(), 'basename': media.getBaseName() }) }}">
+                {{ 'list.media.delete'|trans({}, 'CanalTPMediaManagerBundle') }}
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
