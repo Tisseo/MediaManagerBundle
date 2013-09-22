@@ -11,9 +11,10 @@ class MediaType extends AbstractType
 {
     private $navitia;
 
-    public function __construct(array $navitia)
+    public function __construct(array $navitia, $require)
     {
         $this->navitia = $navitia;
+        $this->require = $require;
     }
 
     private function exampleNavitiaQuery()
@@ -34,7 +35,7 @@ class MediaType extends AbstractType
         $builder->add(
             'logo:logo',
             'file',
-            array('label' => 'logo', 'required' => true)
+            array('label' => 'logo', 'required' => $this->require)
         );
     }
 
@@ -59,7 +60,7 @@ class MediaType extends AbstractType
             $builder->add(
                 $id,
                 'file',
-                array('label' => $name, 'required' => true)
+                array('label' => $name, 'required' => $this->require)
             );
         }
     }

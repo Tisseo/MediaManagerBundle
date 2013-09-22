@@ -1,6 +1,9 @@
 canal_tp_media_manager_add_media:
     pattern:  /MediaManager/add
     defaults: { _controller: CanalTPMediaManagerBundle:Media:add }
+canal_tp_media_manager_update_media:
+    pattern:  /MediaManager/update
+    defaults: { _controller: CanalTPMediaManagerBundle:Media:update }
 canal_tp_media_manager_delete_media:
     pattern:  /MediaManager/{type}/{basename}/delete
     defaults: { _controller: CanalTPMediaManagerBundle:Media:delete }

@@ -34,7 +34,6 @@ class MediaController extends Controller
     private function getCategory($key, $networkCategory, $logoCategory)
     {
         list($id, $name) = split(':', $key);
-        echo $id . "<br>";
         $category = $this->categoryFactory->create($id);
 
         $category->setId($name);
@@ -68,6 +67,8 @@ class MediaController extends Controller
         $logoCategory = $this->categoryFactory->create(CategoryType::LOGO);
 
         foreach ($files as $key => $file) {
+            if ($file == null)
+                continue ;
             $fileName = $file->getClientOriginalName();
             $path = $this->container->getParameter('path.tmp') . $fileName;
 
@@ -91,10 +92,7 @@ class MediaController extends Controller
                 $this->generateUrl('canal_tp_media_manager_all_media')
             );
         }
-        return $this->render(
-            'CanalTPMediaManagerBundle:Media:add.html.twig',
-            array('form' => $form->createView())
-        );
+        return (null);
     }
 
     private function initCompanySettings()
@@ -114,12 +112,19 @@ class MediaController extends Controller
         $this->initCompanySettings();
         $form = $this->createForm(
             new MediaType(
-                $this->container->getParameter('config.navitia')
+                $this->container->getParameter('config.navitia'),
+                true
             )
         );
-        $render = $this->processForm($request, $form);
 
-        return ($render);
+        if (($render = $this->processForm($request, $form)) != null)
+        {
+            return ($render);
+        }
+        return $this->render(
+            'CanalTPMediaManagerBundle:Media:add.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
     public function listAction(Request $request)
@@ -142,7 +147,6 @@ class MediaController extends Controller
         );
     }
 
-
     public function deleteAction($type, $basename)
     {
         $categoryFactory = new CategoryFactory();
@@ -155,6 +159,36 @@ class MediaController extends Controller
             $this->get('session')->getFlashBag()->add('error', $basename);
         return $this->redirect(
             $this->generateUrl('canal_tp_media_manager_all_media')
+        );
+    }
+
+
+    public function updateAction(Request $request)
+    {
+        $categoryFactory = new CategoryFactory();
+        $networkCategory = $categoryFactory->create(CategoryType::NETWORK);
+        $logoCategory = $categoryFactory->create(CategoryType::LOGO);
+
+        $this->initCompanySettings();
+        $networks = $this->company->getMediasByCategory($networkCategory);
+        $logo = $this->company->getMediasByCategory($logoCategory);
+        $form = $this->createForm(
+            new MediaType(
+                $this->container->getParameter('config.navitia'),
+                false
+            )
+        );
+        if (($render = $this->processForm($request, $form)) != null)
+        {
+            return ($render);
+        }
+        return $this->render(
+            'CanalTPMediaManagerBundle:Media:update.html.twig',
+            array(
+                'form' => $form->createView(),
+                'networks' => $networks,
+                'logos' => $logo
+            )
         );
     }
 }
