@@ -56,33 +56,25 @@ class MediaType extends AbstractType
         array $networks
         )
     {
-        foreach ($networks as $id => $name) {
+        foreach ($networks as $network) {
             $builder->add(
-                $id,
+                $network->id,
                 'file',
-                array('label' => $name, 'required' => $this->require)
+                array('label' => $network->name, 'required' => $this->require)
             );
         }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // $service = ServiceFacade::getInstance();
-        // $service->setConfiguration($this->navitia);
-        // $result = $service->call($this->exampleNavitiaQuery());
-
-        $networks = array(
-                        'network:AAA' => 'AAA',
-                        'network:BBB' => 'BBB',
-                        'network:CCC' => 'CCC',
-                        'network:DDD' => 'DDD',
-                        'network:EEE' => 'EEE'
-        );
+        $service = ServiceFacade::getInstance();
+        $service->setConfiguration($this->navitia);
+        $result = $service->call($this->exampleNavitiaQuery());
 
         $this->initLogoField($builder);
-        // if ($result->pagination->total_result > 0) {
-            $this->initNetworkFields($builder, $networks);
-        // }
+        if ($result->pagination->total_result > 0) {
+            $this->initNetworkFields($builder, $result->networks);
+        }
         $this->initButtonSubmit($builder);
     }
 
