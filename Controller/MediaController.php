@@ -67,8 +67,9 @@ class MediaController extends Controller
         $logoCategory = $this->categoryFactory->create(CategoryType::LOGO);
 
         foreach ($files as $key => $file) {
-            if ($file == null)
-                continue ;
+            if ($file == null) {
+                continue;
+            }
             $fileName = $file->getClientOriginalName();
             $path = $this->container->getParameter('path.tmp') . $fileName;
 
@@ -117,8 +118,7 @@ class MediaController extends Controller
             )
         );
 
-        if (($render = $this->processForm($request, $form)) != null)
-        {
+        if (($render = $this->processForm($request, $form)) != null) {
             return ($render);
         }
         return $this->render(
@@ -153,10 +153,11 @@ class MediaController extends Controller
         $category = $categoryFactory->create($type);
         $this->initCompanySettings();
 
-        if ($this->company->removeMedia($category, $basename))
+        if ($this->company->removeMedia($category, $basename)) {
             $this->get('session')->getFlashBag()->add('notice', $basename);
-        else
+        } else {
             $this->get('session')->getFlashBag()->add('error', $basename);
+        }
         return $this->redirect(
             $this->generateUrl('canal_tp_media_manager_all_media')
         );
@@ -178,8 +179,7 @@ class MediaController extends Controller
                 false
             )
         );
-        if (($render = $this->processForm($request, $form)) != null)
-        {
+        if (($render = $this->processForm($request, $form)) != null) {
             return ($render);
         }
         return $this->render(

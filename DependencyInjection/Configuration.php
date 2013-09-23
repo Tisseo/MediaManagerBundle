@@ -32,8 +32,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(__DIR__ . '/../Resources/config/navitia.yml')
                 ->end()
             ->end()
-        ->end()
-        ;
+        ->end();
 
         return $treeBuilder;
     }

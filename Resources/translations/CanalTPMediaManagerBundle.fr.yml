@@ -2,6 +2,9 @@
 form:
     add:
         title: Ajouter un média
-        submit: Enregistrer
+        submit: Valider
+    update:
+        title: Mettre à jour un média
+        submit: Valider
 list:
     title: Liste des médias
