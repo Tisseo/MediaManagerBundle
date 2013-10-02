@@ -22,6 +22,6 @@
         "canaltp/navitia": "dev-master"
     },
     "autoload": {
-        "psr-0": { "CanalTP\\MediaManagerBundle": "src/" }
+        "psr-0": { "CanalTP\\MediaManagerBundle": "" }
     }
 }
