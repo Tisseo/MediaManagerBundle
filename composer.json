@@ -17,7 +17,7 @@
             "url": "packagist.canaltp.fr"
         }
     ],
-    "require-dev": {
+    "require": {
         "canaltp/media-manager": "dev-master",
         "canaltp/navitia": "dev-master"
     },
