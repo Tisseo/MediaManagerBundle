@@ -24,5 +24,5 @@
     "autoload": {
         "psr-0": { "CanalTP\\MediaManagerBundle\\": "" }
     },
-    "target-dir": "Bundle/MediaManager/"
+    "target-dir": "CanalTP/MediaManagerBundle/"
 }
