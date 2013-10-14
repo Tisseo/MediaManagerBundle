@@ -4,7 +4,6 @@ namespace CanalTP\MediaManagerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Navitia\Component\Service\ServiceFacade;
 use CanalTP\MediaManagerBundle\Form\Type\MediaType;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
@@ -43,6 +42,7 @@ class MediaController extends Controller
         } else {
             $category->setParent($logoCategory);
         }
+
         return ($category);
     }
 
@@ -56,6 +56,7 @@ class MediaController extends Controller
             $category
         );
         $media->setFileName($category->getName());
+
         return ($this->company->addMedia($media));
     }
 
@@ -93,6 +94,7 @@ class MediaController extends Controller
                 $this->generateUrl('canal_tp_media_manager_all_media')
             );
         }
+
         return (null);
     }
 
@@ -121,6 +123,7 @@ class MediaController extends Controller
         if (($render = $this->processForm($request, $form)) != null) {
             return ($render);
         }
+
         return $this->render(
             'CanalTPMediaManagerBundle:Media:add.html.twig',
             array('form' => $form->createView())
@@ -136,6 +139,7 @@ class MediaController extends Controller
         $this->initCompanySettings();
         $networks = $this->company->getMediasByCategory($networkCategory);
         $logo = $this->company->getMediasByCategory($logoCategory);
+
         return $this->render(
             'CanalTPMediaManagerBundle:Media:list.html.twig',
             array(
@@ -158,11 +162,11 @@ class MediaController extends Controller
         } else {
             $this->get('session')->getFlashBag()->add('error', $basename);
         }
+
         return $this->redirect(
             $this->generateUrl('canal_tp_media_manager_all_media')
         );
     }
-
 
     public function updateAction(Request $request)
     {
@@ -182,6 +186,7 @@ class MediaController extends Controller
         if (($render = $this->processForm($request, $form)) != null) {
             return ($render);
         }
+
         return $this->render(
             'CanalTPMediaManagerBundle:Media:update.html.twig',
             array(

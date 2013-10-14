@@ -5,7 +5,6 @@ namespace CanalTP\MediaManagerBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Navitia\Component\Service\ServiceFacade;
-use CanalTP\MediaManager\Category\CategoryType;
 
 class MediaType extends AbstractType
 {
