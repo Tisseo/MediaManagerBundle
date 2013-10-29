@@ -17,19 +17,6 @@ class MediaController extends Controller
     private $categoryFactory = null;
     private $mediaBuilder = null;
 
-    private function exampleNavitiaQuery()
-    {
-        $query = array(
-            'api' => 'coverage',
-            'parameters' => array(
-                'region' => 'PaysDeLaLoire',
-                'action' => 'networks'
-            )
-        );
-
-        return ($query);
-    }
-
     private function getCategory($key, $networkCategory, $logoCategory)
     {
         list($id, $name) = split(':', $key);
