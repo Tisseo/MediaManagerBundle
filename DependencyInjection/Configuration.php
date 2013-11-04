@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('tmp_dir')
-                    ->defaultValue('/tmp/CanalTP/MediaManager/')
+                    ->defaultValue('/tmp/')
                 ->end()
                 ->scalarNode('company_path')
                     ->defaultValue(__DIR__ . '/../Resources/config/company.yml')
@@ -33,7 +33,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
-
         return $treeBuilder;
     }
 }
