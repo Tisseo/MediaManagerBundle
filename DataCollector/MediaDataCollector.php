@@ -70,16 +70,12 @@ class MediaDataCollector
         );
     }
 
-    public function saveFiles(
-        $files
-    )
+    public function saveFiles($files)
     {
         foreach ($files as $file) {
-            if ($file == null) {
+            if ($file->getPath() == null) {
                 continue;
             }
-            echo "<pre>" ; var_dump($file); echo "</pre>";
-
             $fileName = $file->getPath()->getClientOriginalName();
             $path = $this->container->getParameter('path.tmp') . $fileName;
 
