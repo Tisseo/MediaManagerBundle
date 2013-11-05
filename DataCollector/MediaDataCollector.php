@@ -25,15 +25,12 @@ class MediaDataCollector
 
     private function initCategories($key)
     {
-
         list($parent, $current) = split(':::', $key);
         list($id, $name) = split('::', $current);
 
         $category = $this->categoryFactory->create($id);
 
         $category->setName($name);
-
-
         if ($parent != "")
         {
             list($id, $name) = split('::', $parent);
@@ -42,13 +39,6 @@ class MediaDataCollector
             $parentCategory->setName($name);
             $category->setParent($parentCategory);
         }
-
-        // if ($id == $this->parentCategory->getId()) {
-        //     $category->setParent($this->parentCategory);
-        // } else {
-        //     $category->setParent($this->currentCategory);
-        // }
-
         return ($category);
     }
 

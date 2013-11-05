@@ -25,7 +25,7 @@ class CanalTPMediaManagerExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader(
-            $container, new FileLocator(__DIR__.'/../Resources/config')
+            $container, new FileLocator(__DIR__ . '/../Resources/config')
         );
 
         $container->setParameter('path.tmp', $config['tmp_dir']);
