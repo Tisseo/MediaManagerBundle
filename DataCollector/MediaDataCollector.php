@@ -2,7 +2,6 @@
 
 namespace CanalTP\MediaManagerBundle\DataCollector;
 
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
@@ -14,13 +13,19 @@ class MediaDataCollector
     private $company = null;
     private $categoryFactory = null;
     private $mediaBuilder = null;
-    private $container = null;
+    // chemin vers dossier temporaire (dossier de stockage des médias)
+    private $path;
+    // Configuration de la compagnie pour laquelle on stocke les médias.
+    private $configCompany;
 
-    public function __construct(Container $container)
+
+    public function __construct($path, $configCompany)
     {
-        $this->container = $container;
         $this->mediaBuilder = new MediaBuilder();
         $this->categoryFactory = new CategoryFactory();
+        $this->path = $path;
+        $this->configCompany= $configCompany;
+        $this->init();
     }
 
     private function initCategories($key)
@@ -62,24 +67,23 @@ class MediaDataCollector
     {
         $this->company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
-        $company = $this->container->getParameter('config.company');
 
-        $this->company->setName($company['name']);
+        $this->company->setName($this->configCompany['name']);
         $this->company->setConfiguration(
-            $configurationBuilder->buildConfiguration($company)
+            $configurationBuilder->buildConfiguration($this->configCompany)
         );
     }
 
     public function saveFiles($files)
-    {
+    {               
         foreach ($files as $file) {
             if ($file->getPath() == null) {
                 continue;
             }
             $fileName = $file->getPath()->getClientOriginalName();
-            $path = $this->container->getParameter('path.tmp') . $fileName;
+            $path = $this->path . $fileName;
 
-            $file->getPath()->move($this->container->getParameter('path.tmp'), $fileName);
+            $file->getPath()->move($this->path, $fileName);
             if (!$this->save($path, $file->getId())) {
                 throw new \Exception($path . ': Saving file fail.');
             }
