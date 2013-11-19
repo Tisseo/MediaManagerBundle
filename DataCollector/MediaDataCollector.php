@@ -13,16 +13,13 @@ class MediaDataCollector
     private $company = null;
     private $categoryFactory = null;
     private $mediaBuilder = null;
-    // chemin vers dossier temporaire (dossier de stockage des médias)
-    private $path;
     // Configuration de la compagnie pour laquelle on stocke les médias.
     private $configCompany;
 
-    public function __construct($path, $configCompany)
+    public function __construct($configCompany)
     {
         $this->mediaBuilder = new MediaBuilder();
         $this->categoryFactory = new CategoryFactory();
-        $this->path = $path;
         $this->configCompany= $configCompany;
         $this->init();
     }
@@ -93,9 +90,12 @@ class MediaDataCollector
                 continue;
             }
             $fileName = $file->getFile()->getClientOriginalName();
-            $path = $this->path . $fileName;
+            $path = $this->configCompany['storage']['path'] . $fileName;
 
-            $file->getFile()->move($this->path, $fileName);
+            $file->getFile()->move(
+                $this->configCompany['storage']['path'],
+                $fileName
+            );
             if (!$this->save($path, $file->getId())) {
                 throw new \Exception($path . ': Saving file fail.');
             }
