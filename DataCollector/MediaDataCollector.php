@@ -14,13 +14,13 @@ class MediaDataCollector
     private $categoryFactory = null;
     private $mediaBuilder = null;
     // Configuration de la compagnie pour laquelle on stocke les médias.
-    private $configCompany;
+    private $configurations;
 
-    public function __construct($configCompany)
+    public function __construct(Array $configurations)
     {
         $this->mediaBuilder = new MediaBuilder();
         $this->categoryFactory = new CategoryFactory();
-        $this->configCompany= $configCompany;
+        $this->configurations= $configurations;
         $this->init();
     }
 
@@ -43,13 +43,12 @@ class MediaDataCollector
         return ($category);
     }
 
-    private function save($file, $key)
+    public function save($path, $key)
     {
-
         $category = $this->initCategories($key);
 
         $media = $this->mediaBuilder->buildMedia(
-            $file,
+            $path,
             $this->company,
             $category
         );
@@ -63,15 +62,15 @@ class MediaDataCollector
         $this->company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
 
-        $this->company->setName($this->configCompany['name']);
+        $this->company->setName($this->configurations['name']);
         $this->company->setConfiguration(
-            $configurationBuilder->buildConfiguration($this->configCompany)
+            $configurationBuilder->buildConfiguration($this->configurations)
         );
     }
 
     /**
      * Retourne un tableau de chemin de médias
-     * @param  type $key
+     * @param  $key
      * @return type
      */
     public function getPathByMedia(Media $media)
@@ -83,22 +82,12 @@ class MediaDataCollector
         return (empty($medias) ? '' : $medias[0]->getPath());
     }
 
-    public function saveFiles($files)
+    /**
+     * Return configurations of MediaManager
+     * @return $configurations
+     */
+    public function getConfigurations()
     {
-        foreach ($files as $file) {
-            if ($file->getFile() == null) {
-                continue;
-            }
-            $fileName = $file->getFile()->getClientOriginalName();
-            $path = $this->configCompany['storage']['path'] . $fileName;
-
-            $file->getFile()->move(
-                $this->configCompany['storage']['path'],
-                $fileName
-            );
-            if (!$this->save($path, $file->getId())) {
-                throw new \Exception($path . ': Saving file fail.');
-            }
-        }
+        return ($this->configurations);
     }
 }
