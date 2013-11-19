@@ -7,6 +7,7 @@ use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
 use CanalTP\MediaManager\Category\CategoryType;
+use CanalTP\IussaadBundle\Entity\Media;
 
 class MediaDataCollector
 {
@@ -74,16 +75,30 @@ class MediaDataCollector
         );
     }
 
+    /**
+     * Retourne un tableau de chemin de médias 
+     * @param type $key
+     * @return type
+     */
+    public function getPathsByMedia(Media $media)
+    {
+        
+        $category = $this->initCategories($media->getId());
+        $medias = $this->company->getMediasByCategory($category);
+        $path = empty($medias) ? '': $medias[0];
+        return $path;
+    }
+    
     public function saveFiles($files)
     {               
         foreach ($files as $file) {
-            if ($file->getPath() == null) {
+            if ($file->getFile() == null) {
                 continue;
             }
-            $fileName = $file->getPath()->getClientOriginalName();
+            $fileName = $file->getFile()->getClientOriginalName();
             $path = $this->path . $fileName;
 
-            $file->getPath()->move($this->path, $fileName);
+            $file->getFile()->move($this->path, $fileName);
             if (!$this->save($path, $file->getId())) {
                 throw new \Exception($path . ': Saving file fail.');
             }
