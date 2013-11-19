@@ -6,7 +6,6 @@ use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
-use CanalTP\MediaManager\Category\CategoryType;
 use CanalTP\IussaadBundle\Entity\Media;
 
 class MediaDataCollector
@@ -18,7 +17,6 @@ class MediaDataCollector
     private $path;
     // Configuration de la compagnie pour laquelle on stocke les médias.
     private $configCompany;
-
 
     public function __construct($path, $configCompany)
     {
@@ -37,14 +35,14 @@ class MediaDataCollector
         $category = $this->categoryFactory->create($id);
 
         $category->setName($name);
-        if ($parent != "")
-        {
+        if ($parent != "") {
             list($id, $name) = split('::', $parent);
             $parentCategory = $this->categoryFactory->create($id);
 
             $parentCategory->setName($name);
             $category->setParent($parentCategory);
         }
+
         return ($category);
     }
 
@@ -63,7 +61,6 @@ class MediaDataCollector
         return ($this->company->addMedia($media));
     }
 
-
     public function init()
     {
         $this->company = new Company();
@@ -76,21 +73,21 @@ class MediaDataCollector
     }
 
     /**
-     * Retourne un tableau de chemin de médias 
-     * @param type $key
+     * Retourne un tableau de chemin de médias
+     * @param  type $key
      * @return type
      */
-    public function getPathsByMedia(Media $media)
+    public function getPathByMedia(Media $media)
     {
-        
+
         $category = $this->initCategories($media->getId());
         $medias = $this->company->getMediasByCategory($category);
-        $path = empty($medias) ? '': $medias[0];
-        return $path;
+
+        return (empty($medias) ? '' : $medias[0]->getPath());
     }
-    
+
     public function saveFiles($files)
-    {               
+    {
         foreach ($files as $file) {
             if ($file->getFile() == null) {
                 continue;
