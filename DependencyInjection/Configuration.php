@@ -21,18 +21,34 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('canal_tp_media_manager');
 
         $rootNode
-            ->children()
-                ->scalarNode('tmp_dir')
-                    ->defaultValue('/tmp/')
-                ->end()
-                ->scalarNode('company_path')
-                    ->defaultValue(__DIR__ . '/../Resources/config/company.yml')
-                ->end()
-                ->scalarNode('navitia_path')
-                    ->defaultValue(__DIR__ . '/../Resources/config/navitia.yml')
+        ->children()
+            ->arrayNode('configurations')
+                ->info('MediaManager configuration')
+                ->cannotBeEmpty()
+                ->children()
+                    ->scalarNode('name')
+                        ->info('Name of SIM')
+                        ->defaultValue('Unknown')
+                    ->end()
+                    ->arrayNode('storage')
+                        ->info('Configation of SIM storage')
+                        ->children()
+                            ->scalarNode('type')->defaultValue(
+                                'filesystem'
+                            )->end()
+                            ->scalarNode('path')->defaultValue(
+                                '/tmp/my_storage/'
+                            )->end()
+                        ->end()
+                    ->end()
+                    ->scalarNode('strategy')
+                        ->info('Configuration of SIM strategy')
+                        ->defaultValue('default')
+                    ->end()
                 ->end()
             ->end()
         ->end();
+
         return $treeBuilder;
     }
 }

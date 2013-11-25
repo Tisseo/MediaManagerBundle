@@ -2,53 +2,59 @@
 
 namespace CanalTP\MediaManagerBundle\DataCollector;
 
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
-use CanalTP\MediaManager\Category\CategoryType;
+use CanalTP\IussaadBundle\Entity\Media;
 
 class MediaDataCollector
 {
+    const PARENT_CATEGORY_SEP = '____';
+    const CATEGORY_SEP = '___';
+
     private $company = null;
     private $categoryFactory = null;
     private $mediaBuilder = null;
-    private $container = null;
+    // Configuration de la compagnie pour laquelle on stocke les médias.
+    private $configurations;
 
-    public function __construct(Container $container)
+    public function __construct(Array $configurations)
     {
-        $this->container = $container;
         $this->mediaBuilder = new MediaBuilder();
         $this->categoryFactory = new CategoryFactory();
+        $this->configurations= $configurations;
+        $this->init();
     }
 
     private function initCategories($key)
     {
-        list($parent, $current) = split(':::', $key);
-        list($id, $name) = split('::', $current);
+        list($parent, $current) = split(
+            MediaDataCollector::PARENT_CATEGORY_SEP,
+            $key
+        );
+        list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $current);
 
         $category = $this->categoryFactory->create($id);
 
         $category->setName($name);
-        if ($parent != "")
-        {
-            list($id, $name) = split('::', $parent);
+        if ($parent != "") {
+            list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $parent);
             $parentCategory = $this->categoryFactory->create($id);
 
             $parentCategory->setName($name);
             $category->setParent($parentCategory);
         }
+
         return ($category);
     }
 
-    private function save($file, $key)
+    public function save($path, $key)
     {
-
         $category = $this->initCategories($key);
 
         $media = $this->mediaBuilder->buildMedia(
-            $file,
+            $path,
             $this->company,
             $category
         );
@@ -57,32 +63,37 @@ class MediaDataCollector
         return ($this->company->addMedia($media));
     }
 
-
     public function init()
     {
         $this->company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
-        $company = $this->container->getParameter('config.company');
 
-        $this->company->setName($company['name']);
+        $this->company->setName($this->configurations['name']);
         $this->company->setConfiguration(
-            $configurationBuilder->buildConfiguration($company)
+            $configurationBuilder->buildConfiguration($this->configurations)
         );
     }
 
-    public function saveFiles($files)
+    /**
+     * Retourne un tableau de chemin de médias
+     * @param  $key
+     * @return type
+     */
+    public function getPathByMedia(Media $media)
     {
-        foreach ($files as $file) {
-            if ($file->getPath() == null) {
-                continue;
-            }
-            $fileName = $file->getPath()->getClientOriginalName();
-            $path = $this->container->getParameter('path.tmp') . $fileName;
 
-            $file->getPath()->move($this->container->getParameter('path.tmp'), $fileName);
-            if (!$this->save($path, $file->getId())) {
-                throw new \Exception($path . ': Saving file fail.');
-            }
-        }
+        $category = $this->initCategories($media->getId());
+        $medias = $this->company->getMediasByCategory($category);
+
+        return (empty($medias) ? '' : $medias[0]->getPath());
+    }
+
+    /**
+     * Return configurations of MediaManager
+     * @return $configurations
+     */
+    public function getConfigurations()
+    {
+        return ($this->configurations);
     }
 }
