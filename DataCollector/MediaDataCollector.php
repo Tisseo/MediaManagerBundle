@@ -10,6 +10,9 @@ use CanalTP\IussaadBundle\Entity\Media;
 
 class MediaDataCollector
 {
+    const PARENT_CATEGORY_SEP = '____';
+    const CATEGORY_SEP = '___';
+
     private $company = null;
     private $categoryFactory = null;
     private $mediaBuilder = null;
@@ -26,14 +29,17 @@ class MediaDataCollector
 
     private function initCategories($key)
     {
-        list($parent, $current) = split(':::', $key);
-        list($id, $name) = split('::', $current);
+        list($parent, $current) = split(
+            MediaDataCollector::PARENT_CATEGORY_SEP,
+            $key
+        );
+        list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $current);
 
         $category = $this->categoryFactory->create($id);
 
         $category->setName($name);
         if ($parent != "") {
-            list($id, $name) = split('::', $parent);
+            list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $parent);
             $parentCategory = $this->categoryFactory->create($id);
 
             $parentCategory->setName($name);
