@@ -96,4 +96,13 @@ class MediaDataCollector
     {
         return ($this->configurations);
     }
+
+    /**
+     * Return company of MediaManager
+     * @return $configurations
+     */
+    public function getCompany()
+    {
+        return ($this->company);
+    }
 }
