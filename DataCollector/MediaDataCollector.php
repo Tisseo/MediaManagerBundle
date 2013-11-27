@@ -52,7 +52,6 @@ class MediaDataCollector
     public function save($path, $key)
     {
         $category = $this->initCategories($key);
-
         $media = $this->mediaBuilder->buildMedia(
             $path,
             $this->company,
@@ -81,11 +80,10 @@ class MediaDataCollector
      */
     public function getPathByMedia(Media $media)
     {
-
         $category = $this->initCategories($media->getId());
-        $medias = $this->company->getMediasByCategory($category);
+        $media = $this->company->findMedia($category, $category->getName());
 
-        return (empty($medias) ? '' : $medias[0]->getPath());
+        return (empty($media) ? '' : $media->getPath());
     }
 
     /**
