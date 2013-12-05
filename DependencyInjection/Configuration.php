@@ -39,6 +39,9 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('path')->defaultValue(
                                 '/tmp/my_storage/'
                             )->end()
+                            ->scalarNode('url')->defaultValue(
+                                'http://mediatheque-ws.ctp.dev.canaltp.fr/'
+                            )->end()
                         ->end()
                     ->end()
                     ->scalarNode('strategy')
