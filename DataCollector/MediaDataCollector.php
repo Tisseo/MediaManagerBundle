@@ -29,17 +29,17 @@ class MediaDataCollector
 
     private function initCategories($key)
     {
-        list($parent, $current) = split(
+        list($parent, $current) = explode(
             MediaDataCollector::PARENT_CATEGORY_SEP,
             $key
         );
-        list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $current);
+        list($id, $name) = explode(MediaDataCollector::CATEGORY_SEP, $current);
 
         $category = $this->categoryFactory->create($id);
 
         $category->setName($name);
         if ($parent != "") {
-            list($id, $name) = split(MediaDataCollector::CATEGORY_SEP, $parent);
+            list($id, $name) = explode(MediaDataCollector::CATEGORY_SEP, $parent);
             $parentCategory = $this->categoryFactory->create($id);
 
             $parentCategory->setName($name);
