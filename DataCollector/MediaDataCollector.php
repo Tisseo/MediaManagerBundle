@@ -6,7 +6,7 @@ use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
-use CanalTP\IussaadBundle\Entity\Media;
+use CanalTP\IussaadCoreBundle\Entity\Media;
 
 class MediaDataCollector
 {

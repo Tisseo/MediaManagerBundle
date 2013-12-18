@@ -19,6 +19,7 @@
     ],
     "require": {
         "canaltp/media-manager": "dev-master",
+        "canaltp/iussaad-core-bundle": "1.0.*@dev",
         "canaltp/navitia": "dev-master"
     },
     "autoload": {
