@@ -2,18 +2,20 @@
 
 namespace CanalTP\MediaManagerBundle\Tests\MediaDataCollector;
 
+use CanalTP\MediaManager\Registry;
 use CanalTP\MediaManagerBundle\DataCollector\MediaDataCollector;
 use CanalTP\IussaadCoreBundle\Entity\Media;
 
 class MediaControllerTest extends \PHPUnit_Framework_TestCase
 {
-    private $mediaDataCollector = null;
+    private $mediaManager = null;
     private $configuration = null;
+    private $file_path = null;
 
     protected function setUp()
     {
         $this->configuration = array(
-            'name' => 'CanalTP',
+            'name' => 'CanalTPTest',
             'storage' => array(
                 'type' => 'filesystem',
                 'path' => '/tmp/MediaManagerBundleTest/',
@@ -21,36 +23,43 @@ class MediaControllerTest extends \PHPUnit_Framework_TestCase
             ),
             'strategy' => 'navitia'
         );
-        $this->mediaDataCollector = new MediaDataCollector($this->configuration);
+        $this->mediaManager = new MediaDataCollector($this->configuration);
     }
 
     public function testSave()
     {
-        $path = __DIR__.'/../data/canaltp_logo.jpg';
+        $path = Registry::get('/') . Registry::get('MEDIA_PATH_SRC');
 
-        $this->mediaDataCollector->save($path, 'network___network:CHO____line___line:CHI:10');
-        $this->assertFileExists('/tmp/MediaManagerBundleTest/sims/0/lines/line:CHI:10.jpg');
+        $this->mediaManager->save($path, Registry::get('MEDIA_KEY'));
+        $this->assertFileExists(Registry::get('MEDIA_PATH_DEST'));
+
+        rename(Registry::get('MEDIA_PATH_DEST'), $path);
     }
 
     public function testGetConfiguration()
     {
-        $this->assertEquals($this->configuration, $this->mediaDataCollector->getConfigurations());
+        $this->assertEquals(
+            $this->configuration,
+            $this->mediaManager->getConfigurations()
+        );
     }
 
     public function testGetCompany()
     {
-        $this->assertNotNull($this->mediaDataCollector->getCompany());
+        $this->assertNotNull($this->mediaManager->getCompany());
     }
 
     public function testGetPathByMedia()
     {
+        $path = Registry::get('/') . Registry::get('MEDIA_PATH_SRC');
         $media = new Media();
 
-        $media->setId('network___network:CHO____line___line:CHI:10');
-        $this->assertEquals('/tmp/MediaManagerBundleTest/sims/0/lines/line:CHI:10.jpg', $this->mediaDataCollector->getPathByMedia($media));
-    }
-
-    protected function tearDown()
-    {
+        rename($path, Registry::get('MEDIA_PATH_DEST'));
+        $media->setId(Registry::get('MEDIA_KEY'));
+        $this->assertEquals(
+            Registry::get('MEDIA_PATH_DEST'),
+            $this->mediaManager->getPathByMedia($media)
+        );
+        rename(Registry::get('MEDIA_PATH_DEST'), $path);
     }
 }
