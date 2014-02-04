@@ -28,12 +28,6 @@ class CanalTPMediaManagerExtension extends Extension
             $container, new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        // Configuration for MediaManager
-        $container->setParameter(
-            'config.media_manager',
-            $config['configurations']
-        );
-
         $loader->load('services.yml');
     }
 }

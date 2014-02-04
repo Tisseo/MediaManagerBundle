@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
         ->children()
             ->arrayNode('configurations')
+                ->prototype('array')
                 ->info('MediaManager configuration')
                 ->cannotBeEmpty()
                 ->children()
