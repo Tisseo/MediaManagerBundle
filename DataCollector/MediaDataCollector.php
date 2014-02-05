@@ -6,7 +6,7 @@ use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
-use CanalTP\IussaadCoreBundle\Entity\Media;
+use CanalTP\MediaManagerBundle\Entity\Media;
 
 class MediaDataCollector
 {
@@ -84,6 +84,14 @@ class MediaDataCollector
         $media = $this->company->findMedia($category, $category->getName());
 
         return (empty($media) ? '' : $media->getPath());
+    }
+
+    public function getUrlByMedia(Media $media)
+    {
+        $path = $this->configurations['storage']['url'];
+        $path .= substr($this->getPathByMedia($media), strlen($this->configurations['storage']['path']));
+
+        return ($path);
     }
 
     /**

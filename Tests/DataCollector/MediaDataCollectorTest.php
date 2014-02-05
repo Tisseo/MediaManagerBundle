@@ -4,7 +4,7 @@ namespace CanalTP\MediaManagerBundle\Tests\MediaDataCollector;
 
 use CanalTP\MediaManager\Registry;
 use CanalTP\MediaManagerBundle\DataCollector\MediaDataCollector;
-use CanalTP\IussaadCoreBundle\Entity\Media;
+use CanalTP\MediaManagerBundle\Entity\Media;
 
 class MediaControllerTest extends \PHPUnit_Framework_TestCase
 {
