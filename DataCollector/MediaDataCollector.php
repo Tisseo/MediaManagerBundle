@@ -49,7 +49,7 @@ class MediaDataCollector
         return ($category);
     }
 
-    public function save($path, $key)
+    private function saveMedia($path, $key)
     {
         $category = $this->initCategories($key);
         $media = $this->mediaBuilder->buildMedia(
@@ -62,7 +62,22 @@ class MediaDataCollector
         return ($this->company->addMedia($media));
     }
 
-    public function init()
+    public function save(Media $file)
+    {
+        $mediaManagerConfigs = $this->configurations;
+        $fileName = $file->getFile()->getClientOriginalName();
+        $path = $mediaManagerConfigs['storage']['path'] . $fileName;
+
+        $file->getFile()->move(
+            $mediaManagerConfigs['storage']['path'],
+            $fileName
+        );
+        if (!$this->saveMedia($path, $file->getId())) {
+            throw new \Exception($path . ': Saving file fail.');
+        }
+    }
+
+    private function init()
     {
         $this->company = new Company();
         $configurationBuilder = new ConfigurationBuilder();
