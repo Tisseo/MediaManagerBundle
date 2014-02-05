@@ -28,6 +28,16 @@ class CanalTPMediaManagerExtension extends Extension
             $container, new FileLocator(__DIR__ . '/../Resources/config')
         );
 
+        $container->setParameter(
+            'canal_tp_media_manager.configurations.iussaad',
+            $config['configurations']['iussaad']
+        );
+
+        $container->setParameter(
+            'canal_tp_media_manager.configurations.mtt',
+            $config['configurations']['mtt']
+        );
+
         $loader->load('services.yml');
     }
 }
