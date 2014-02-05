@@ -62,7 +62,7 @@ class MediaDataCollector
         return ($this->company->addMedia($media));
     }
 
-    public function save(Media $file)
+    public function save($file)
     {
         $mediaManagerConfigs = $this->configurations;
         $fileName = $file->getFile()->getClientOriginalName();
@@ -93,7 +93,7 @@ class MediaDataCollector
      * @param  $key
      * @return type
      */
-    public function getPathByMedia(Media $media)
+    public function getPathByMedia($media)
     {
         $category = $this->initCategories($media->getId());
         $media = $this->company->findMedia($category, $category->getName());
