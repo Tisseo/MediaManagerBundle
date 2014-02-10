@@ -2,6 +2,8 @@
 
 namespace CanalTP\MediaManagerBundle\DataCollector;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
@@ -10,6 +12,7 @@ use CanalTP\MediaManagerBundle\Entity\Media;
 
 class MediaDataCollector
 {
+    const FILE_CLASS = "Symfony\Component\HttpFoundation\File\File";
     const PARENT_CATEGORY_SEP = '____';
     const CATEGORY_SEP = '___';
 
@@ -65,7 +68,11 @@ class MediaDataCollector
     public function save($file)
     {
         $mediaManagerConfigs = $this->configurations;
-        $fileName = $file->getFile()->getClientOriginalName();
+        if (get_class($file->getFile()) == MediaDataCollector::FILE_CLASS) {
+            $fileName = $file->getFile()->getFilename();
+        } else {
+            $fileName = $file->getFile()->getClientOriginalName();
+        }
         $path = $mediaManagerConfigs['storage']['path'] . $fileName;
 
         $file->getFile()->move(
