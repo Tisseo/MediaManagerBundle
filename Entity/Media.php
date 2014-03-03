@@ -10,26 +10,18 @@ class Media
     private $id;
     private $path;
     private $url;
+    private $category;
 
     /**
      * @Assert\File(maxSize="6000000")
      */
     private $file;
     private $label;
+    private $fileName;
 
-    public function __construct(
-        $parentType = null,
-        $parentId = null,
-        $childrenType = '',
-        $childrenId = ''
-    )
+    public function __construct()
     {
         $this->id = '';
-
-        if ($parentType != null) {
-            $this->id = $parentType . MediaDataCollector::CATEGORY_SEP . $parentId;
-        }
-        $this->id .= MediaDataCollector::PARENT_CATEGORY_SEP . $childrenType . MediaDataCollector::CATEGORY_SEP . $childrenId;
     }
 
     public function getId()
@@ -52,6 +44,18 @@ class Media
     public function getLabel()
     {
         return $this->label;
+    }
+
+    public function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
+
+        return $this;
+    }
+
+    public function getFileName()
+    {
+        return $this->fileName;
     }
 
     public function setPath($path)
@@ -90,4 +94,15 @@ class Media
         return $this->file;
     }
 
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
 }

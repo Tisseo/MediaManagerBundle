@@ -8,18 +8,17 @@ use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
 use CanalTP\MediaManager\Category\Factory\CategoryFactory;
+use CanalTP\MediaManager\Category\CategoryType;
+use CanalTP\MediaManagerBundle\Entity\Category;
 use CanalTP\MediaManagerBundle\Entity\Media;
 
 class MediaDataCollector
 {
     const FILE_CLASS = "Symfony\Component\HttpFoundation\File\File";
-    const PARENT_CATEGORY_SEP = '____';
-    const CATEGORY_SEP = '___';
 
     private $company = null;
     private $categoryFactory = null;
     private $mediaBuilder = null;
-    // Configuration de la compagnie pour laquelle on stocke les médias.
     private $configurations;
 
     public function __construct(Array $configurations)
@@ -30,42 +29,39 @@ class MediaDataCollector
         $this->init();
     }
 
-    private function initCategories($key)
+    private function initCategories($category)
     {
-        list($parent, $current) = explode(
-            MediaDataCollector::PARENT_CATEGORY_SEP,
-            $key
-        );
-        list($id, $name) = explode(MediaDataCollector::CATEGORY_SEP, $current);
+        $current = $this->categoryFactory->create($category->getType());
 
-        $category = $this->categoryFactory->create($id);
+        while ($category) {
+            $current->setId($category->getId());
+            $current->setName($category->getName());
+            $currentParent = $current;
 
-        $category->setName($name);
-        if ($parent != "") {
-            list($id, $name) = explode(MediaDataCollector::CATEGORY_SEP, $parent);
-            $parentCategory = $this->categoryFactory->create($id);
-
-            $parentCategory->setName($name);
-            $category->setParent($parentCategory);
+            if (!($category = $category->getParent())) {
+                break;
+            }
+            $current = $this->categoryFactory->create($category->getType());
+            $current->setParent($currentParent);
         }
 
-        return ($category);
+        return ($current);
     }
 
-    private function saveMedia($path, $key)
+    private function saveMedia(Media $file, $path)
     {
-        $category = $this->initCategories($key);
+        $category = $this->initCategories($file->getCategory());
         $media = $this->mediaBuilder->buildMedia(
             $path,
             $this->company,
             $category
         );
-        $media->setFileName($category->getName());
+        $media->setFileName($file->getFileName());
 
         return ($this->company->addMedia($media));
     }
 
-    public function save($file)
+    public function save(Media $file)
     {
         $mediaManagerConfigs = $this->configurations;
         if (get_class($file->getFile()) == MediaDataCollector::FILE_CLASS) {
@@ -79,7 +75,7 @@ class MediaDataCollector
             $mediaManagerConfigs['storage']['path'],
             $fileName
         );
-        if (!$this->saveMedia($path, $file->getId())) {
+        if (!$this->saveMedia($file, $path)) {
             throw new \Exception($path . ': Saving file fail.');
         }
     }
@@ -100,10 +96,10 @@ class MediaDataCollector
      * @param  $key
      * @return type
      */
-    public function getPathByMedia($media)
+    public function getPathByMedia(Media $media)
     {
-        $category = $this->initCategories($media->getId());
-        $media = $this->company->findMedia($category, $category->getName());
+        $category = $this->initCategories($media->getCategory());
+        $media = $this->company->findMedia($category, $media->getFileName());
 
         return (empty($media) ? '' : $media->getPath());
     }
