@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "canaltp/media-manager": "dev-ci"
+        "canaltp/media-manager": "0.0.1"
     },
     "autoload": {
         "psr-0": { "CanalTP\\MediaManagerBundle\\": "" }
