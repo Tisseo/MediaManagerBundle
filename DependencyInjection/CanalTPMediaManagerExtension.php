@@ -29,8 +29,8 @@ class CanalTPMediaManagerExtension extends Extension
         );
 
         $container->setParameter(
-            'canal_tp_media_manager.configurations.iussaad',
-            $config['configurations']['iussaad']
+            'canal_tp_media_manager.configurations.sam',
+            $config['configurations']['sam']
         );
 
         $container->setParameter(
