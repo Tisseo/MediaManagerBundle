@@ -15,6 +15,16 @@ use Symfony\Component\Yaml\Parser;
  */
 class CanalTPMediaManagerExtension extends Extension
 {
+    private function loadConfigurations(array $config, ContainerBuilder $container)
+    {
+        foreach ($config['configurations'] as $key => $params) {
+            $container->setParameter(
+                'canal_tp_media_manager.configurations.' . $key,
+                $params
+            );
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -28,15 +38,7 @@ class CanalTPMediaManagerExtension extends Extension
             $container, new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        $container->setParameter(
-            'canal_tp_media_manager.configurations.sam',
-            $config['configurations']['sam']
-        );
-
-        $container->setParameter(
-            'canal_tp_media_manager.configurations.mtt',
-            $config['configurations']['mtt']
-        );
+        $this->loadConfigurations($config, $container);
 
         $loader->load('services.yml');
     }
