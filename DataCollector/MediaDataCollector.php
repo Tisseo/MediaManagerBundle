@@ -107,8 +107,13 @@ class MediaDataCollector
 
     public function getUrlByMedia(Media $media)
     {
-        $path = $this->configurations['storage']['url'];
-        $path .= substr($this->getPathByMedia($media), strlen($this->configurations['storage']['path']));
+        $mediaPath = $this->getPathByMedia($media);
+        if (empty($mediaPath)) {
+            $path = null;
+        } else {
+            $path = $this->configurations['storage']['url'];
+            $path .= substr($mediaPath, strlen($this->configurations['storage']['path']));
+        }
 
         return ($path);
     }
