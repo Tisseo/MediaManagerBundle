@@ -36,6 +36,7 @@ class MediaDataCollector
         while ($category) {
             $current->setId($category->getId());
             $current->setName($category->getName());
+            $current->setRessourceId($category->getRessourceId());
             $currentParent = $current;
 
             if (!($category = $category->getParent())) {

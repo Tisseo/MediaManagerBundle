@@ -8,11 +8,13 @@ class Category
     private $name = null;
     private $type = null;
     private $parent = null;
+    private $ressourceId = null;
 
     public function __construct($id = 'Unknown', $type)
     {
         $this->id = $id;
         $this->name = 'Unknown';
+        $this->ressourceId = 'Unknown';
         $this->type = $type;
     }
 
@@ -60,5 +62,17 @@ class Category
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function setRessourceId($ressourceId)
+    {
+        $this->ressourceId = $ressourceId;
+
+        return $this;
+    }
+
+    public function getRessourceId()
+    {
+        return $this->ressourceId;
     }
 }
