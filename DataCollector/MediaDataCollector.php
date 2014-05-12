@@ -29,21 +29,28 @@ class MediaDataCollector
         $this->init();
     }
 
+
+
     private function initCategories($category)
     {
-        $current = $this->categoryFactory->create($category->getType());
+        $categories = array();
 
-        while ($category) {
+        array_unshift($categories, $category);
+        while ($category->getParent()) {
+            $category = $category->getParent();
+            array_unshift($categories, $category);
+        }
+
+        $parentCategory = false;
+        foreach ($categories as $category) {
+            $current = $this->categoryFactory->create($category->getType());
             $current->setId($category->getId());
             $current->setName($category->getName());
             $current->setRessourceId($category->getRessourceId());
-            $currentParent = $current;
-
-            if (!($category = $category->getParent())) {
-                break;
+            if ($parentCategory) {
+                $current->setParent($parentCategory);
             }
-            $current = $this->categoryFactory->create($category->getType());
-            $current->setParent($currentParent);
+            $parentCategory = $current;
         }
 
         return ($current);
