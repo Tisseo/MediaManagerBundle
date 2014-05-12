@@ -29,8 +29,6 @@ class MediaDataCollector
         $this->init();
     }
 
-
-
     private function initCategories($category)
     {
         $categories = array();
@@ -52,7 +50,6 @@ class MediaDataCollector
             }
             $parentCategory = $current;
         }
-
         return ($current);
     }
 
