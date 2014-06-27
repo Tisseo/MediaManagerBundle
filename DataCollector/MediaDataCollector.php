@@ -15,6 +15,7 @@ use CanalTP\MediaManagerBundle\Entity\Media;
 class MediaDataCollector
 {
     const FILE_CLASS = "Symfony\Component\HttpFoundation\File\File";
+    const TMP_DIR = '/tmp/';
 
     private $company = null;
     private $categoryFactory = null;
@@ -74,10 +75,10 @@ class MediaDataCollector
         } else {
             $fileName = $file->getFile()->getClientOriginalName();
         }
-        $path = $mediaManagerConfigs['storage']['path'] . $fileName;
+        $path = MediaDataCollector::TMP_DIR . $fileName;
 
         $file->getFile()->move(
-            $mediaManagerConfigs['storage']['path'],
+            MediaDataCollector::TMP_DIR,
             $fileName
         );
         if (!$this->saveMedia($file, $path)) {
