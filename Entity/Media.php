@@ -4,20 +4,18 @@ namespace CanalTP\MediaManagerBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use CanalTP\MediaManagerBundle\DataCollector\MediaDataCollector;
+use CanalTP\MediaManager\Media\AbstractMedia;
 
-class Media
+class Media extends AbstractMedia
 {
     private $id;
-    private $path;
     private $url;
-    private $category;
 
     /**
      * @Assert\File(maxSize="6000000")
      */
     private $file;
     private $label;
-    private $fileName;
 
     public function __construct()
     {
@@ -46,30 +44,6 @@ class Media
         return $this->label;
     }
 
-    public function setFileName($fileName)
-    {
-        $this->fileName = $fileName;
-
-        return $this;
-    }
-
-    public function getFileName()
-    {
-        return $this->fileName;
-    }
-
-    public function setPath($path)
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    public function getPath()
-    {
-        return $this->path;
-    }
-
     public function setUrl($url)
     {
         $this->url = $url;
@@ -81,7 +55,7 @@ class Media
     {
         return $this->url;
     }
-    
+
     public function setFile($file)
     {
         $this->file = $file;
@@ -92,17 +66,5 @@ class Media
     public function getFile()
     {
         return $this->file;
-    }
-
-    public function setCategory($category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    public function getCategory()
-    {
-        return $this->category;
     }
 }

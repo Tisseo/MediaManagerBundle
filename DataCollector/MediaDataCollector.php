@@ -4,6 +4,7 @@ namespace CanalTP\MediaManagerBundle\DataCollector;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use CanalTP\MediaManager\Media\MediaInterface;
 use CanalTP\MediaManager\Company\Company;
 use CanalTP\MediaManager\Company\Configuration\Builder\ConfigurationBuilder;
 use CanalTP\MediaManager\Media\Builder\MediaBuilder;
@@ -64,7 +65,10 @@ class MediaDataCollector
         );
         $media->setFileName($file->getFileName());
 
-        return ($this->company->addMedia($media));
+        if (!$this->company->addMedia($media)) {
+            throw new \Exception($path . ': Saving file fail.');
+        }
+        return ($media);
     }
 
     public function save(Media $file)
@@ -81,9 +85,7 @@ class MediaDataCollector
             MediaDataCollector::TMP_DIR,
             $fileName
         );
-        if (!$this->saveMedia($file, $path)) {
-            throw new \Exception($path . ': Saving file fail.');
-        }
+        return ($this->saveMedia($file, $path));
     }
 
     private function init()
@@ -97,12 +99,15 @@ class MediaDataCollector
         );
     }
 
-    /**
-     * Retourne un tableau de chemin de médias
-     * @param  $key
-     * @return type
-     */
-    public function getPathByMedia(Media $media)
+    public function find(Category $category, $fileName)
+    {
+        $category = $this->initCategories($category);
+        $media = $this->company->findMedia($category, $fileName);
+
+        return ($media);
+    }
+
+    public function getPathByMedia(MediaInterface $media)
     {
         $category = $this->initCategories($media->getCategory());
         $media = $this->company->findMedia($category, $media->getFileName());
@@ -110,14 +115,13 @@ class MediaDataCollector
         return (empty($media) ? '' : $media->getPath());
     }
 
-    public function getUrlByMedia(Media $media)
+    public function getUrlByMedia(MediaInterface $media)
     {
-        $mediaPath = $this->getPathByMedia($media);
-        if (empty($mediaPath)) {
+        if (empty($media->getPath())) {
             $path = null;
         } else {
             $path = $this->configurations['storage']['url'];
-            $path .= substr($mediaPath, strlen($this->configurations['storage']['path']));
+            $path .= substr($media->getPath(), strlen($this->configurations['storage']['path']));
         }
 
         return ($path);
