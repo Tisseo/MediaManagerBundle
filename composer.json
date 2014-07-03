@@ -17,9 +17,6 @@
             "url": "packagist.canaltp.fr"
         }
     ],
-    "require": {
-        "canaltp/media-manager": "dev-0.0.6"
-    },
     "autoload": {
         "psr-0": { "CanalTP\\MediaManagerBundle\\": "" }
     },
