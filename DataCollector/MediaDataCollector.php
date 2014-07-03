@@ -117,7 +117,7 @@ class MediaDataCollector
 
     public function getUrlByMedia(MediaInterface $media)
     {
-        if (empty($media->getPath())) {
+        if (!$media->getPath()) {
             $path = null;
         } else {
             $path = $this->configurations['storage']['url'];
