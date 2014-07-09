@@ -117,6 +117,9 @@ class MediaDataCollector
 
     public function getUrlByMedia(MediaInterface $media)
     {
+        $category = $this->initCategories($media->getCategory());
+        $media = $this->company->findMedia($category, $media->getFileName());
+
         if (!$media->getPath()) {
             $path = null;
         } else {
