@@ -10,7 +10,7 @@ Dependence:
 Requirements
 -------------
 
-1. [MediaManager (Component)](http://hg.prod.canaltp.fr/ctp/MediaManager.git/summary)
+1. [MediaManager (Component)](https://github.com/CanalTP/MediaManagerComponent)
 2. [NavitiaComponent](http://hg.prod.canaltp.fr/ctp/NavitiaComponent.git/summary)
 
 Installation
