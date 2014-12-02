@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Media Manager Bundle",
     "keywords": [],
-    "homepage": "git@github.com:CanalTP/MediaManagerBundle.git",
+    "homepage": "https://github.com/CanalTP/MediaManagerBundle",
     "license": "MIT",
     "authors": [
         {
