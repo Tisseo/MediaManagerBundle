@@ -120,6 +120,9 @@ class MediaDataCollector
         $category = $this->initCategories($media->getCategory());
         $media = $this->company->findMedia($category, $media->getFileName());
 
+        if ($media == null) {
+            throw new \Exception('File not found', 404);
+        }
         if (!$media->getPath()) {
             $path = null;
         } else {
