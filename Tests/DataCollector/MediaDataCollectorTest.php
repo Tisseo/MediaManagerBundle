@@ -21,7 +21,7 @@ class MediaControllerTest extends \PHPUnit_Framework_TestCase
                 'path' => '/tmp/MediaManagerBundleTest/',
                 'url' => 'http://localhost/uploads/MediaManagerTest/'
             ),
-            'strategy' => 'navitia'
+	    'strategy' => 'CanalTP\MediaManager\Strategy\DefaultStrategy'
         );
         $this->mediaManager = new MediaDataCollector($this->configuration);
     }
