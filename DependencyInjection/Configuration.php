@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('strategy')
                         ->info('Configuration of SIM strategy')
-                        ->defaultValue('default')
+                        ->defaultValue('CanalTP\MediaManager\Strategy\DefaultStrategy')
                     ->end()
                 ->end()
             ->end()
