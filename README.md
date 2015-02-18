@@ -10,8 +10,7 @@ Bundle of Media Manager to manage all media in a project.
 Requirement
 -------------
 
-1. [MediaManager (Component)](http://hg.prod.canaltp.fr/ctp/MediaManager.git/summary)
-
+1. [MediaManager (Component)](https://github.com/CanalTP/MediaManagerComponent)
 
 Installation
 -------------
