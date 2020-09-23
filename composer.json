@@ -11,12 +11,6 @@
             "email": "remy.abikhalil@canaltp.fr"
         }
     ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "packagist.canaltp.fr"
-        }
-    ],
     "require": {
         "canaltp/media-manager": "0.0.8"
     },
@@ -24,7 +18,6 @@
         "phpunit/phpunit": "4.5.*"
     },
     "autoload": {
-        "psr-0": { "CanalTP\\MediaManagerBundle\\": "" }
-    },
-    "target-dir": "CanalTP/MediaManagerBundle/"
+        "psr-4": { "CanalTP\\MediaManagerBundle\\": "" }
+    }
 }
